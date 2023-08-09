@@ -5,11 +5,11 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
-import { Auth } from './app-auth.guard';
+import { Auth, NoAuth } from './app-auth.guard';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, canActivate: [Auth] },
-  { path: "login", component: LoginComponent },
+  { path: "login", component: LoginComponent, canActivate: [NoAuth] },
   { path: "**", component: NotFoundComponent }
 ];
 

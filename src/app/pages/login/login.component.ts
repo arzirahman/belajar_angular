@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/services/auth.service';
 import { ResponseType } from 'src/app/utils/response-types';
 import { LoginDataType, LoginErrorType } from 'src/app/utils/auth-types';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './login.component.html',
@@ -15,7 +16,11 @@ export class LoginComponent {
     passwordError?: string = "";
     messageError?: string = "";
 
-    constructor(private title: Title, private authService: AuthService) {
+    constructor(
+        private title: Title,
+        private authService: AuthService,
+        private router: Router
+    ) {
         title.setTitle('Login');
     }
 
@@ -35,7 +40,9 @@ export class LoginComponent {
             password: this.password
         }).subscribe(
             (response: ResponseType<LoginDataType, LoginErrorType>) => {
-                console.log(response);
+                if (response.code === 200) {
+                    this.router.navigate(["/"])
+                }
             },
             (error: ResponseType<LoginDataType, LoginErrorType>) => {
                 if (error.errors?.message) this.messageError = error.errors?.message;

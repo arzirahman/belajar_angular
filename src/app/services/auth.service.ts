@@ -13,12 +13,13 @@ import { SharedDataService } from './shared-data.service';
 export class AuthService {
     private loginPath: string = `${baseUrl}/auth/login`;
     private refreshTokenPath: string = `${baseUrl}/auth/refresh-token`;
+    private logoutPath: string = `${baseUrl}/auth/logout`;
 
     constructor(private http: HttpClient, private sharedDataService: SharedDataService) { }
 
     refreshToken(): Observable<ResponseType<LoginDataType, LoginErrorType>> {
         this.sharedDataService.startLoading();
-        return this.http.get(this.refreshTokenPath)
+        return this.http.get(this.refreshTokenPath, { withCredentials: true })
             .pipe(
                 map((response: any) => {
                     this.sharedDataService.stopLoading();
@@ -49,7 +50,7 @@ export class AuthService {
 
     login(input: LoginType): Observable<ResponseType<LoginDataType, LoginErrorType>> {
         this.sharedDataService.startLoading();
-        return this.http.post(this.loginPath, input)
+        return this.http.post(this.loginPath, input, { withCredentials: true })
             .pipe(
                 map((response: any) => {
                     this.sharedDataService.stopLoading();
@@ -66,6 +67,31 @@ export class AuthService {
                 catchError((error: HttpErrorResponse) => {
                     this.sharedDataService.stopLoading();
                     const errorResponse: ResponseType<LoginDataType, LoginErrorType> = {
+                        code: error.error.code,
+                        status: error.error.status,
+                        errors: error.error.errors || { message: "Can't connect to the server" }
+                    };
+                    return throwError(errorResponse);
+                })
+            );
+    }
+
+    logout(): Observable<ResponseType<any, any>> {
+        this.sharedDataService.startLoading();
+        return this.http.post(this.logoutPath, {}, { withCredentials: true })
+            .pipe(
+                map((response: any) => {
+                    this.sharedDataService.stopLoading();
+                    const responseData: ResponseType<any, any> = {
+                        code: response.code,
+                        status: response.status,
+                        message: response.message
+                    };
+                    return responseData;
+                }),
+                catchError((error: HttpErrorResponse) => {
+                    this.sharedDataService.stopLoading();
+                    const errorResponse: ResponseType<any, any> = {
                         code: error.error.code,
                         status: error.error.status,
                         errors: error.error.errors || { message: "Can't connect to the server" }
