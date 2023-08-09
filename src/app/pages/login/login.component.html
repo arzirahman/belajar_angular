@@ -1,0 +1,22 @@
+<div class="container">
+    <form (submit)="login($event)" class="form content">
+        <div class="logo-parent">
+            <img class="logo" src="/assets/himace.png" alt="Logo HIMACE">
+        </div>
+        <mat-form-field class="form-field">
+            <mat-label>Email</mat-label>
+            <input class="input" (ngModelChange)="clearEmailError()" name="email" matInput type="email"
+                placeholder="Email" [(ngModel)]="email">
+            <div *ngIf="emailError" class="error-message">{{ emailError }}</div>
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <mat-label>Password</mat-label>
+            <input name="password" (ngModelChange)="clearPasswordError()" matInput type="password"
+                placeholder="Password" [(ngModel)]="password">
+            <div class="error-message" *ngIf="passwordError">{{passwordError}}</div>
+        </mat-form-field>
+        <div class="error-message" style="margin-bottom: 20px;" *ngIf="messageError">{{messageError}}</div>
+        <button type="submit" style="padding: 25px; font-weight: 700; font-size: 16px;" mat-raised-button
+            color="primary">LOGIN</button>
+    </form>
+</div>

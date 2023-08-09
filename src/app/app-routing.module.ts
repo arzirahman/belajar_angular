@@ -1,7 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+
+import { Auth } from './app-auth.guard';
+
+const routes: Routes = [
+  { path: "", component: HomeComponent, canActivate: [Auth] },
+  { path: "login", component: LoginComponent },
+  { path: "**", component: NotFoundComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
